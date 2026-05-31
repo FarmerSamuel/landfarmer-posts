@@ -33,10 +33,6 @@ ${TONE_RULE}
 - 可以用比喻把農業連結到人生體悟，但不說教
 - 不說大詞（不要用「溫柔革命」「雙重永續」這種官方語言）
 
-【用畫面說故事，不要直接說感受】
-✗「這一刻農夫真的很感動」→ 說破了
-✓「農夫站在那裡看了很久，忘記手上還拿著鋤頭」→ 畫面讓讀者自己感受
-
 【表情符號規則】
 - 少量點綴，不要每句都用，整篇 2–4 個即可
 - 適合農夫版的符號：🌱 🌿 🌾 🪴 🌧️ ☀️ 🤔 😅 💡 🙏
@@ -65,23 +61,6 @@ ${TONE_RULE}
 - 廢文感優先：對自己此刻的狀態帶著好笑的自嘲，不是苦情
 - 生活細節優先：把拔、寶寶、家庭日常
 - 不說教，不升華，就是說生活
-
-【最重要的寫作原則：用畫面說故事，不要直接說感受】
-✗ 直接說感受（禁止）：「欸這小人什麼時候變成小幫手了」→ 把感動說破了，讀者沒有空間自己感受
-✓ 用具體畫面（正確）：「去年還在地上吃土的小娃兒，就這麼不知不覺變成田間小幫手了」→ 讀者看到畫面，自己感動
-
-轉換邏輯：
-- 想說「好感動」→ 不要說感動，說一個讓人感動的具體畫面
-- 想說「好可愛」→ 不要說可愛，說他做了什麼讓人覺得可愛的事
-- 想說「好驚訝」→ 不要說驚訝，說是什麼細節讓你停下來
-
-【農婦專屬詞彙】
-- 孩子稱呼：說「小娃兒」「寶寶」「把拔的寶貝」，不說「小人」「小人物」「這個孩子」
-- 自稱：「農婦」，偶爾「我」也可以但不多用
-農作物的量詞和動詞要符合真實農場用法：
-- 豆莢、四季豆、豌豆 → 「條」不是「顆」
-- 採收動作 → 「剪」「摘」「拔」要對應正確作物
-- 「恍惚」（文學感，像時間短暫消失）比「恍神」（像在滑手機分心）更適合感觸時刻
 
 【表情符號規則】
 - 農婦版可以比農夫版多一點點，整篇 3–5 個
@@ -143,12 +122,9 @@ ${TONE_RULE}
    媽媽說了什麼，孩子怎麼回，就這樣。
 
 5. 結尾「輕輕放下」：
-   不升華、不說教。就是一句帶著好笑無奈的喃喃自語。
-
-6. 【用畫面說故事，絕對不直接說感受】
-   ✗「媽媽突然覺得很感動」→ 禁止，說破了
-   ✓「去年還在地上吃土的小娃兒，就這麼不知不覺變成田間小幫手了」→ 具體畫面，讀者自己感動
-   遇到任何情緒（感動、驚訝、捨不得、好笑），一律轉換成一個具體的畫面或細節來表達。
+   不升華、不說教。就是一句帶著好笑無奈的喃喃自語，
+   像是「我想了很久，決定不要跟他繼續爭這個問題。」
+   或是「好，好，總裁說得對。」
 
 【格式規則】
 - 段落式散文，對話用換行呈現
@@ -189,7 +165,7 @@ export default function App() {
   const [error, setError] = useState("");
 
   const apiCall = (promptText) =>
-    fetch("https://api/generate", {
+    fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -361,12 +337,12 @@ export default function App() {
               {/* Row 2 */}
               <div style={{ display: "flex", gap: 8 }}>
                 {[
-                  { key: "yeyang", label: "農婦散文風", sub: "場景散文，輕升華" },
+                  { key: "yeyang", label: "農婦散文風", sub: "場景・散文・輕升華" },
                   { key: "both", label: "三版全開", sub: "同時生成比較" },
                 ].map(v => (
                   <button key={v.key} onClick={() => setVoice(v.key)} style={{
                     flex: 1,
-                    padding: "10px 6px",
+                    padding: "10px 8px",
                     borderRadius: 8,
                     border: voice === v.key ? "2px solid #4a7c2e" : "1px solid #c8e0a0",
                     background: v.key === "yeyang"
@@ -375,10 +351,9 @@ export default function App() {
                     cursor: "pointer",
                     textAlign: "center",
                     fontFamily: "inherit",
-                    minWidth: 0,
                   }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: v.key === "yeyang" ? "#5a2a8a" : "#2d4a1e", whiteSpace: "nowrap" }}>{v.label}</div>
-                    <div style={{ fontSize: 10, color: v.key === "yeyang" ? "#9a6acc" : "#7aac48", marginTop: 2, whiteSpace: "nowrap" }}>{v.sub}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: v.key === "yeyang" ? "#5a2a8a" : "#2d4a1e" }}>{v.label}</div>
+                    <div style={{ fontSize: 11, color: v.key === "yeyang" ? "#9a6acc" : "#7aac48", marginTop: 2 }}>{v.sub}</div>
                   </button>
                 ))}
               </div>
@@ -441,7 +416,7 @@ export default function App() {
           {(voice === "yeyang" || voice === "both") && (
             <PostCard
               title="農婦散文風版"
-              subtitle="場景散文，輕升華"
+              subtitle="場景式散文・輕升華"
               accentColor="#6a2a9a"
               tagColor="#f0e8f8"
               tagText="#4a1a7a"
@@ -464,7 +439,7 @@ export default function App() {
           <div style={{ fontSize: 12, color: "#4a7c2e", fontWeight: 600, marginBottom: 6 }}>使用提示</div>
           <div style={{ fontSize: 12, color: "#5a7a3a", lineHeight: 1.8 }}>
             · 情境描述越具體，貼文越像真的（例如加上天氣、誰在場、有什麼意外）<br />
-            · 作家風適合有點感觸的日子，農婦版適合搭配生活照，農夫版適合田間照<br />
+            · 葉揚風適合有點感觸的日子，農婦版適合搭配生活照，農夫版適合田間照<br />
             · AI 草稿是起點，建議你微調 1–2 句讓它更像你說話的樣子
           </div>
         </div>
