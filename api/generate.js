@@ -12,7 +12,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Parse body manually if needed
     let body = req.body;
     if (typeof body === 'string') {
       body = JSON.parse(body);
