@@ -165,7 +165,7 @@ export default function App() {
   const [error, setError] = useState("");
 
   const apiCall = (promptText) =>
-    fetch("https://api.anthropic.com/v1/messages", {
+    fetch("/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
