@@ -12,14 +12,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    let body = req.body;
-    if (typeof body === 'string') {
-      body = JSON.parse(body);
-    }
-
-    if (!process.env.ANTHROPIC_API_KEY) {
-      return res.status(500).json({ error: 'API key not configured' });
-    }
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
