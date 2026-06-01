@@ -169,7 +169,7 @@ export default function App() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-4-5",
         max_tokens: 1000,
         messages: [{ role: "user", content: `${promptText}\n情境：${situation}\n類型：${mood}\n季節：${season}\n\n請直接輸出貼文內容，不要加任何說明或前言。` }],
       }),
