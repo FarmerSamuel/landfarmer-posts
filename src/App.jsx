@@ -125,6 +125,7 @@ ${TONE_RULE}
 現在，用這個語氣，以大地農夫農婦的身份，根據以下情境寫一篇 FB 貼文：
 `;
 
+// ── 影片腳本（流量型）系統提示 ────────────────────────────
 const BASE_VIDEO_SCRIPT = `你是大地農夫品牌的短影音腳本規劃師，熟悉行銷專家陳修平的短影片七大主題框架，也深刻理解大地農夫的品牌語氣與農場特色。
 
 【大地農夫品牌背景】
@@ -186,6 +187,77 @@ const VIDEO_VOICE_RULES = {
 生活細節優先：把拔、寶寶、農場的意外插曲。鏡頭重點：農婦的生活場景、家人互動、有趣細節。`,
 };
 
+// ── 溫和調性系統提示 ────────────────────────────────────
+const BASE_GENTLE_SCRIPT = `你是大地農夫品牌的短影音腳本顧問，專門以「溫和調性」協助製作短影音。
+
+【大地農夫品牌氣質】
+質樸、自然、親子、土地生活。
+目標客群：認同土地價值、嚮往半農生活的城市家庭。
+核心主張：「不用大聲、不用搞笑、不用很會演；用溫柔旁白＋手部動作＋孩子表情＋土地細節，做出大地農夫自己的短影音風格。」
+
+${TONE_RULE}
+
+【大地農夫短影音固定公式】
+前3秒：一句生活痛點或溫柔提問（讓都市家庭說「這說的是我」）
+中間：真實農場畫面＋簡單旁白（不需要解釋太多，相信畫面的力量）
+最後：一句土地系收尾＋品牌露出
+
+【語氣與文字原則】
+- 旁白文字要像說話，不是廣告文案
+- 每句話要短，有呼吸感，像詩的節奏
+- 不需要「告訴」觀眾道理，讓畫面說話
+- 結尾不用催促式 CTA，用品牌歸屬感收尾
+- 絕對不說：限時優惠、立刻報名、強力推薦
+- 關鍵氛圍詞：慢、陪、等待、真實、土地、孩子、手、感覺
+
+【七大主題（大地農夫版詮釋）——優先選曬過程與說故事】
+1. 曬過程（最優先）— 讓觀眾看到土地真的在發生事。拍泥土、手、孩子、採收、備料、手作、日常。信任感最強。
+2. 說故事（優先）— 農夫爸爸、孩子、土地、家庭，品牌故事比產品更能打動人。
+3. 教知識 — 把農業知識講成生活智慧。「為什麼孩子要摸土？」而非學術農業知識。
+4. 熬雞湯 — 土地系生活金句，但每句感悟必須接一個真實畫面，不能純文字。
+5. 選立場 — 溫和表達生活主張（孩子需要土地、城市需要自給自足），不走衝突路線。
+6. 賣產品 — 賣使用情境，讓觀眾感覺在看生活，而不是在看廣告。
+7. 演劇情 — 親子小劇場，輕短自然，要符合大地農夫氣質，不要尷尬誇張。
+
+【腳本格式規則】嚴格依照以下格式輸出，不要加任何說明或前言：
+
+▍主題類型
+[主題名稱]：[一個會讓人想停下來看的標題]
+
+▍前3秒
+旁白：「[一句生活痛點或溫柔提問，15字以內，讓都市家庭有共鳴]」
+畫面：[對應的具體鏡頭，農場真實場景]
+
+▍素材拍攝清單（按故事順序）
+□ [畫面1：越具體越好，含手部動作/孩子/土地細節]
+□ [畫面2]
+□ [畫面3]
+□ [畫面4]
+□ [畫面5]
+
+▍旁白腳本
+[完整旁白文字，按段落換行，短句有呼吸感，像說話，不是廣告]
+
+▍品牌收尾
+「[一句土地系結語，不催促，有溫度]」
+大地農夫｜[副標或活動名稱]
+
+現在根據以下資訊生成腳本：
+`;
+
+const GENTLE_VOICE_RULES = {
+  farmer: `【旁白角色：農夫（一拳）視角】
+旁白用「農夫」自稱或「我」皆可，口吻沉穩、真實，像農夫在田裡喃喃說話。
+適合說：為什麼做農夫、土地教我的事、送給孩子的禮物、農夫爸爸的心情。
+鏡頭重點：農夫的手、田間動作、農夫與孩子的互動。`,
+
+  farmwife: `【旁白角色：農婦（阿雯）視角】
+旁白用「農婦」自稱或「我」皆可，口吻溫暖、生活，像媽媽在陪孩子時說的話。
+適合說：親子農場日常、讓孩子慢下來、一個人的晚餐、農婦的手作時光。
+鏡頭重點：農婦的生活場景、家人互動、孩子的表情、手作的細節。`,
+};
+
+// ── 常數 ────────────────────────────────────────────────
 const MOODS = ["農事日誌", "產品推廣", "會員故事", "活動預告", "廢文日常", "節氣感懷"];
 const SEASONS = ["春", "夏", "秋", "冬"];
 const VOICE_LABELS = { farmer: "農夫版", farmwife: "農婦版", yeyang: "農婦散文風版" };
@@ -200,9 +272,25 @@ const VIDEO_THEMES = [
   { key: "drama", label: "演劇情", sub: "輕鬆農場小短劇" },
 ];
 
+const GENTLE_THEMES = [
+  { key: "process", label: "曬過程", sub: "土地正在發生的事", priority: "最優先" },
+  { key: "story", label: "說故事", sub: "農夫爸爸與土地故事", priority: "優先" },
+  { key: "knowledge", label: "教知識", sub: "農業變生活智慧", priority: "" },
+  { key: "wisdom", label: "熬雞湯", sub: "土地系生活金句", priority: "" },
+  { key: "product", label: "賣產品", sub: "使用情境式銷售", priority: "" },
+  { key: "stance", label: "選立場", sub: "溫柔生活主張", priority: "" },
+  { key: "drama", label: "演劇情", sub: "親子小劇場", priority: "" },
+];
+
 const VIDEO_VOICES = [
   { key: "farmwife", label: "農婦版", sub: "口語・廢文・生活感" },
   { key: "farmer", label: "農夫版", sub: "理念・知識・故事感" },
+  { key: "both", label: "兩種都要", sub: "農夫 + 農婦各一份" },
+];
+
+const GENTLE_VOICES = [
+  { key: "farmer", label: "農夫版", sub: "沉穩・喃喃・土地感" },
+  { key: "farmwife", label: "農婦版", sub: "溫暖・生活・親子感" },
   { key: "both", label: "兩種都要", sub: "農夫 + 農婦各一份" },
 ];
 
@@ -239,14 +327,25 @@ export default function App() {
 
   // Video script state
   const [videoTasks, setVideoTasks] = useState("");
-  const [videoThemeMode, setVideoThemeMode] = useState("auto"); // "auto" | "manual"
-  const [selectedThemes, setSelectedThemes] = useState([]);
+  const [videoThemeMode, setVideoThemeMode] = useState("auto");
+  const [selectedVideoThemes, setSelectedVideoThemes] = useState([]);
   const [videoVoice, setVideoVoice] = useState("farmwife");
   const [videoDuration, setVideoDuration] = useState("60秒");
-  const [videoScripts, setVideoScripts] = useState([]); // [{content, voice}, ...]
+  const [videoScripts, setVideoScripts] = useState([]);
   const [videoLoading, setVideoLoading] = useState(false);
   const [videoCopied, setVideoCopied] = useState("");
   const [videoError, setVideoError] = useState("");
+
+  // Gentle script state
+  const [gentleTasks, setGentleTasks] = useState("");
+  const [gentleThemeMode, setGentleThemeMode] = useState("auto");
+  const [selectedGentleThemes, setSelectedGentleThemes] = useState([]);
+  const [gentleVoice, setGentleVoice] = useState("farmer");
+  const [gentleDuration, setGentleDuration] = useState("60秒");
+  const [gentleScripts, setGentleScripts] = useState([]);
+  const [gentleLoading, setGentleLoading] = useState(false);
+  const [gentleCopied, setGentleCopied] = useState("");
+  const [gentleError, setGentleError] = useState("");
 
   // Shared favorites & history
   const [favorites, setFavorites] = useState(() => loadLS("lf_favorites", []));
@@ -324,75 +423,108 @@ export default function App() {
     setLoading(false);
   };
 
-  // Video theme toggle
-  const toggleTheme = (key) => {
+  // ── 影片腳本主題切換 ──────────────────────────────────
+  const toggleVideoTheme = (key) => {
     if (videoThemeMode === "auto") {
-      setVideoThemeMode("manual");
-      setSelectedThemes([key]);
-      return;
+      setVideoThemeMode("manual"); setSelectedVideoThemes([key]); return;
     }
-    if (selectedThemes.includes(key)) {
-      const next = selectedThemes.filter(t => t !== key);
-      setSelectedThemes(next);
+    if (selectedVideoThemes.includes(key)) {
+      const next = selectedVideoThemes.filter(t => t !== key);
+      setSelectedVideoThemes(next);
       if (next.length === 0) setVideoThemeMode("auto");
-    } else if (selectedThemes.length < 2) {
-      setSelectedThemes([...selectedThemes, key]);
+    } else if (selectedVideoThemes.length < 2) {
+      setSelectedVideoThemes([...selectedVideoThemes, key]);
     }
-  };
-
-  const setAutoMode = () => {
-    setVideoThemeMode("auto");
-    setSelectedThemes([]);
   };
 
   const generateVideoScripts = async () => {
     if (!videoTasks.trim()) return;
     setVideoLoading(true); setVideoError(""); setVideoScripts([]);
     try {
-      // Build theme instructions for the 2 scripts
       let themeInstructions;
-      if (videoThemeMode === "auto" || selectedThemes.length === 0) {
+      if (videoThemeMode === "auto" || selectedVideoThemes.length === 0) {
         themeInstructions = [
           "根據今日農事工作，從七大主題中自動選擇最適合的一個主題",
           "根據今日農事工作，從七大主題中選一個能與第一份腳本互補的不同主題",
         ];
-      } else if (selectedThemes.length === 1) {
-        const t1 = VIDEO_THEMES.find(t => t.key === selectedThemes[0]);
+      } else if (selectedVideoThemes.length === 1) {
+        const t1 = VIDEO_THEMES.find(t => t.key === selectedVideoThemes[0]);
         themeInstructions = [
           `使用「${t1.label}」主題`,
           `從七大主題中選一個與「${t1.label}」最互補的不同主題`,
         ];
       } else {
-        themeInstructions = selectedThemes.map(key => {
+        themeInstructions = selectedVideoThemes.map(key => {
           const t = VIDEO_THEMES.find(th => th.key === key);
           return `使用「${t.label}」主題`;
         });
       }
-
-      // Build voice assignments for the 2 scripts
       const voices = videoVoice === "both" ? ["farmer", "farmwife"] : [videoVoice, videoVoice];
-
       const results = await Promise.all(
         themeInstructions.map((themeInstruction, i) => {
-          const voiceRules = VIDEO_VOICE_RULES[voices[i]];
-          const content = `${BASE_VIDEO_SCRIPT}\n${voiceRules}\n\n今日農事工作：${videoTasks}\n主題指示：${themeInstruction}\n目標影片長度：${videoDuration}`;
+          const content = `${BASE_VIDEO_SCRIPT}\n${VIDEO_VOICE_RULES[voices[i]]}\n\n今日農事工作：${videoTasks}\n主題指示：${themeInstruction}\n目標影片長度：${videoDuration}`;
           return fetch("/api/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              model: "claude-sonnet-4-5",
-              max_tokens: 1500,
-              messages: [{ role: "user", content }],
-            }),
-          }).then(r => r.json()).then(d => ({
-            content: d.content?.map(b => b.text || "").join("") || "",
-            voice: voices[i],
-          }));
+            body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1500, messages: [{ role: "user", content }] }),
+          }).then(r => r.json()).then(d => ({ content: d.content?.map(b => b.text || "").join("") || "", voice: voices[i] }));
         })
       );
       setVideoScripts(results);
     } catch (e) { setVideoError("生成失敗：" + e.message); }
     setVideoLoading(false);
+  };
+
+  // ── 溫和腳本主題切換 ──────────────────────────────────
+  const toggleGentleTheme = (key) => {
+    if (gentleThemeMode === "auto") {
+      setGentleThemeMode("manual"); setSelectedGentleThemes([key]); return;
+    }
+    if (selectedGentleThemes.includes(key)) {
+      const next = selectedGentleThemes.filter(t => t !== key);
+      setSelectedGentleThemes(next);
+      if (next.length === 0) setGentleThemeMode("auto");
+    } else if (selectedGentleThemes.length < 2) {
+      setSelectedGentleThemes([...selectedGentleThemes, key]);
+    }
+  };
+
+  const generateGentleScripts = async () => {
+    if (!gentleTasks.trim()) return;
+    setGentleLoading(true); setGentleError(""); setGentleScripts([]);
+    try {
+      let themeInstructions;
+      if (gentleThemeMode === "auto" || selectedGentleThemes.length === 0) {
+        themeInstructions = [
+          "根據今日農事工作，從七大主題中自動選擇最適合的一個（優先考慮：曬過程、說故事）",
+          "根據今日農事工作，從七大主題中選一個與第一份互補的不同主題（優先考慮：教知識、熬雞湯）",
+        ];
+      } else if (selectedGentleThemes.length === 1) {
+        const t1 = GENTLE_THEMES.find(t => t.key === selectedGentleThemes[0]);
+        themeInstructions = [
+          `使用「${t1.label}」主題`,
+          `從七大主題中選一個與「${t1.label}」最互補的不同主題`,
+        ];
+      } else {
+        themeInstructions = selectedGentleThemes.map(key => {
+          const t = GENTLE_THEMES.find(th => th.key === key);
+          return `使用「${t.label}」主題`;
+        });
+      }
+      const voices = gentleVoice === "both" ? ["farmer", "farmwife"] : [gentleVoice, gentleVoice];
+      const results = await Promise.all(
+        themeInstructions.map((themeInstruction, i) => {
+          const content = `${BASE_GENTLE_SCRIPT}\n${GENTLE_VOICE_RULES[voices[i]]}\n\n今日農事工作：${gentleTasks}\n主題指示：${themeInstruction}\n目標影片長度：${gentleDuration}`;
+          return fetch("/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1500, messages: [{ role: "user", content }] }),
+          }).then(r => r.json()).then(d => ({ content: d.content?.map(b => b.text || "").join("") || "", voice: voices[i] }));
+        })
+      );
+      setGentleScripts(results);
+    } catch (e) { setGentleError("生成失敗：" + e.message); }
+    setGentleLoading(false);
   };
 
   const copy = (text, key) => {
@@ -403,6 +535,11 @@ export default function App() {
   const copyVideoScript = (content, index) => {
     navigator.clipboard.writeText(content);
     setVideoCopied(String(index)); setTimeout(() => setVideoCopied(""), 2000);
+  };
+
+  const copyGentleScript = (content, index) => {
+    navigator.clipboard.writeText(content);
+    setGentleCopied(String(index)); setTimeout(() => setGentleCopied(""), 2000);
   };
 
   const favCount = favorites.length;
@@ -416,11 +553,12 @@ export default function App() {
           <span style={{ fontSize: 28, fontWeight: 700, color: "#e8f5d0", letterSpacing: 2 }}>大地農夫</span>
           <span style={{ fontSize: 13, color: "#a8c97a", letterSpacing: 1 }}>內容生成系統</span>
         </div>
-        <div style={{ fontSize: 12, color: "#7aac48", marginTop: 4 }}>FB 文案 × 短影音腳本 · AI 生成草稿</div>
+        <div style={{ fontSize: 12, color: "#7aac48", marginTop: 4 }}>FB 文案 × 影片腳本 × 溫和調性 · AI 生成草稿</div>
         <div style={{ display: "flex", gap: 4, marginTop: 16, flexWrap: "wrap" }}>
           {[
             { key: "generate", label: "✏️ FB文案" },
             { key: "video", label: "🎬 影片腳本" },
+            { key: "gentle", label: "🌿 溫和腳本" },
             { key: "favorites", label: `⭐ 好文收藏${favCount ? ` (${favCount})` : ""}` },
             { key: "history", label: `📋 歷史${histCount ? ` (${histCount})` : ""}` },
           ].map(t => (
@@ -497,7 +635,6 @@ export default function App() {
               </button>
               {error && <div style={{ fontSize: 13, color: "#c0392b", marginTop: 8 }}>{error}</div>}
             </div>
-
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {(voice === "farmer" || voice === "both") && (
                 <PostCard title="農夫版" subtitle="思考型・理念・故事感" accentColor="#2d4a1e" tagColor="#d8f0b0" tagText="#2a5010"
@@ -521,7 +658,6 @@ export default function App() {
                   isFavorited={isFavorited(yeyangPost)} />
               )}
             </div>
-
             <div style={{ marginTop: 28, padding: "16px 20px", background: "#eef7e0", borderRadius: 8, borderLeft: "3px solid #8ab561" }}>
               <div style={{ fontSize: 12, color: "#4a7c2e", fontWeight: 600, marginBottom: 6 }}>使用提示</div>
               <div style={{ fontSize: 12, color: "#5a7a3a", lineHeight: 1.8 }}>
@@ -533,33 +669,24 @@ export default function App() {
           </>
         )}
 
-        {/* ── 影片腳本頁 ── */}
+        {/* ── 影片腳本頁（流量型）── */}
         {tab === "video" && (
           <>
             <div style={{ background: "#fff", border: "1px solid #d4e8b0", borderRadius: 12, padding: "24px 28px", marginBottom: 20, boxShadow: "0 2px 8px rgba(45,74,30,0.06)" }}>
-
               <label style={{ fontSize: 13, fontWeight: 600, color: "#2d4a1e", display: "block", marginBottom: 8 }}>今日農事工作項目</label>
               <textarea
                 value={videoTasks} onChange={e => setVideoTasks(e.target.value)}
-                placeholder="例如：採收青花菜（第一次採收）、整理苗床、澆水施肥、除草⋯⋯"
+                placeholder="例如：採收青花菜（第一次採收）、整理苗床、澆水施肥⋯⋯"
                 rows={3}
                 style={{ width: "100%", padding: "12px 14px", fontSize: 15, fontFamily: "'Noto Serif TC', serif", border: "1px solid #c8e0a0", borderRadius: 8, background: "#fafff5", color: "#1a2e10", resize: "vertical", outline: "none", boxSizing: "border-box" }}
               />
-              <div style={{ fontSize: 12, color: "#8ab561", marginTop: 4 }}>
-                越具體越精準 ── 可以列多項，AI 會選最適合拍攝的內容
-              </div>
+              <div style={{ fontSize: 12, color: "#8ab561", marginTop: 4 }}>越具體越精準 ── 可以列多項，AI 會選最適合拍攝的內容</div>
 
-              {/* 聲線選擇 */}
               <div style={{ marginTop: 20 }}>
                 <label style={{ fontSize: 12, color: "#5a7a3a", display: "block", marginBottom: 8, fontWeight: 600 }}>腳本聲線</label>
                 <div style={{ display: "flex", gap: 8 }}>
                   {VIDEO_VOICES.map(v => (
-                    <button key={v.key} onClick={() => setVideoVoice(v.key)} style={{
-                      flex: 1, padding: "10px 8px", borderRadius: 8, textAlign: "center", fontFamily: "inherit", cursor: "pointer",
-                      border: videoVoice === v.key ? "2px solid #4a7c2e" : "1px solid #c8e0a0",
-                      background: videoVoice === v.key ? "#eaf7d8" : "#fafff5",
-                      transition: "all 0.15s",
-                    }}>
+                    <button key={v.key} onClick={() => setVideoVoice(v.key)} style={{ flex: 1, padding: "10px 8px", borderRadius: 8, textAlign: "center", fontFamily: "inherit", cursor: "pointer", border: videoVoice === v.key ? "2px solid #4a7c2e" : "1px solid #c8e0a0", background: videoVoice === v.key ? "#eaf7d8" : "#fafff5", transition: "all 0.15s" }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: "#2d4a1e" }}>{v.label}</div>
                       <div style={{ fontSize: 11, color: "#7aac48", marginTop: 2 }}>{v.sub}</div>
                     </button>
@@ -567,51 +694,22 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 主題選擇 */}
               <div style={{ marginTop: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                  <label style={{ fontSize: 12, color: "#5a7a3a", fontWeight: 600 }}>
-                    影片主題 <span style={{ fontWeight: 400, color: "#8ab561" }}>（陳修平七大主題）</span>
-                  </label>
-                  {videoThemeMode === "manual" && (
-                    <span style={{ fontSize: 11, color: selectedThemes.length >= 2 ? "#c04040" : "#7aac48" }}>
-                      已選 {selectedThemes.length}/2
-                    </span>
-                  )}
+                  <label style={{ fontSize: 12, color: "#5a7a3a", fontWeight: 600 }}>影片主題 <span style={{ fontWeight: 400, color: "#8ab561" }}>（陳修平七大主題）</span></label>
+                  {videoThemeMode === "manual" && <span style={{ fontSize: 11, color: selectedVideoThemes.length >= 2 ? "#c04040" : "#7aac48" }}>已選 {selectedVideoThemes.length}/2</span>}
                 </div>
-
-                {/* AI 自選按鈕 */}
-                <button onClick={setAutoMode} style={{
-                  width: "100%", padding: "10px 14px", marginBottom: 8, borderRadius: 8, cursor: "pointer",
-                  fontFamily: "inherit", textAlign: "left",
-                  border: videoThemeMode === "auto" ? "2px solid #4a7c2e" : "1px solid #c8e0a0",
-                  background: videoThemeMode === "auto" ? "#eaf7d8" : "#fafff5",
-                  transition: "all 0.15s",
-                }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: videoThemeMode === "auto" ? "#2a5010" : "#2d4a1e" }}>
-                    🤖 AI 自選兩個
-                  </span>
-                  <span style={{ fontSize: 11, color: "#7aac48", marginLeft: 8 }}>
-                    根據農事工作自動挑選兩個最適合、互補的主題
-                  </span>
+                <button onClick={() => { setVideoThemeMode("auto"); setSelectedVideoThemes([]); }} style={{ width: "100%", padding: "10px 14px", marginBottom: 8, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", border: videoThemeMode === "auto" ? "2px solid #4a7c2e" : "1px solid #c8e0a0", background: videoThemeMode === "auto" ? "#eaf7d8" : "#fafff5", transition: "all 0.15s" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: videoThemeMode === "auto" ? "#2a5010" : "#2d4a1e" }}>🤖 AI 自選兩個</span>
+                  <span style={{ fontSize: 11, color: "#7aac48", marginLeft: 8 }}>根據農事工作自動挑選兩個最適合、互補的主題</span>
                 </button>
-
-                {/* 7 個主題 */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {VIDEO_THEMES.map(t => {
-                    const isSelected = selectedThemes.includes(t.key);
-                    const isAtLimit = !isSelected && selectedThemes.length >= 2 && videoThemeMode === "manual";
+                    const isSelected = selectedVideoThemes.includes(t.key);
+                    const isAtLimit = !isSelected && selectedVideoThemes.length >= 2 && videoThemeMode === "manual";
                     return (
-                      <button key={t.key} onClick={() => toggleTheme(t.key)} style={{
-                        padding: "10px 12px", borderRadius: 8, cursor: isAtLimit ? "default" : "pointer",
-                        textAlign: "left", fontFamily: "inherit", transition: "all 0.15s",
-                        border: isSelected ? "2px solid #4a7c2e" : "1px solid #c8e0a0",
-                        background: isSelected ? "#eaf7d8" : "#fafff5",
-                        opacity: isAtLimit ? 0.45 : 1,
-                      }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: isSelected ? "#2a5010" : "#2d4a1e" }}>
-                          {isSelected ? "✓ " : ""}{t.label}
-                        </div>
+                      <button key={t.key} onClick={() => toggleVideoTheme(t.key)} style={{ padding: "10px 12px", borderRadius: 8, cursor: isAtLimit ? "default" : "pointer", textAlign: "left", fontFamily: "inherit", transition: "all 0.15s", border: isSelected ? "2px solid #4a7c2e" : "1px solid #c8e0a0", background: isSelected ? "#eaf7d8" : "#fafff5", opacity: isAtLimit ? 0.45 : 1 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: isSelected ? "#2a5010" : "#2d4a1e" }}>{isSelected ? "✓ " : ""}{t.label}</div>
                         <div style={{ fontSize: 11, color: "#7aac48", marginTop: 2 }}>{t.sub}</div>
                       </button>
                     );
@@ -619,65 +717,146 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 長度選擇 */}
               <div style={{ marginTop: 18 }}>
                 <label style={{ fontSize: 12, color: "#5a7a3a", display: "block", marginBottom: 8, fontWeight: 600 }}>目標影片長度</label>
                 <div style={{ display: "flex", gap: 8 }}>
                   {VIDEO_DURATIONS.map(d => (
-                    <button key={d} onClick={() => setVideoDuration(d)} style={{
-                      flex: 1, padding: "10px", borderRadius: 8, fontFamily: "inherit", fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "all 0.15s",
-                      border: videoDuration === d ? "2px solid #4a7c2e" : "1px solid #c8e0a0",
-                      background: videoDuration === d ? "#4a7c2e" : "#fafff5",
-                      color: videoDuration === d ? "#fff" : "#5a7a3a",
-                    }}>{d}</button>
+                    <button key={d} onClick={() => setVideoDuration(d)} style={{ flex: 1, padding: "10px", borderRadius: 8, fontFamily: "inherit", fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", border: videoDuration === d ? "2px solid #4a7c2e" : "1px solid #c8e0a0", background: videoDuration === d ? "#4a7c2e" : "#fafff5", color: videoDuration === d ? "#fff" : "#5a7a3a" }}>{d}</button>
                   ))}
                 </div>
-                <div style={{ fontSize: 11, color: "#8ab561", marginTop: 6 }}>
-                  30秒 = Reels精華款　60秒 = 標準款　90秒 = 較完整的故事款
-                </div>
+                <div style={{ fontSize: 11, color: "#8ab561", marginTop: 6 }}>30秒 = Reels精華款　60秒 = 標準款　90秒 = 較完整的故事款</div>
               </div>
 
-              <button onClick={generateVideoScripts} disabled={videoLoading || !videoTasks.trim()} style={{
-                width: "100%", marginTop: 20, padding: "14px",
-                background: videoLoading ? "#a0c070" : "#1a3a10",
-                color: "#e8f5d0", border: "none", borderRadius: 8,
-                fontSize: 16, fontFamily: "inherit", fontWeight: 700,
-                cursor: videoLoading || !videoTasks.trim() ? "not-allowed" : "pointer",
-                letterSpacing: 1, transition: "background 0.2s",
-              }}>
+              <button onClick={generateVideoScripts} disabled={videoLoading || !videoTasks.trim()} style={{ width: "100%", marginTop: 20, padding: "14px", background: videoLoading ? "#a0c070" : "#1a3a10", color: "#e8f5d0", border: "none", borderRadius: 8, fontSize: 16, fontFamily: "inherit", fontWeight: 700, cursor: videoLoading || !videoTasks.trim() ? "not-allowed" : "pointer", letterSpacing: 1, transition: "background 0.2s" }}>
                 {videoLoading ? "同時規劃兩份腳本中⋯⋯" : "🎬 同時生成兩份腳本"}
               </button>
               {videoError && <div style={{ fontSize: 13, color: "#c0392b", marginTop: 8 }}>{videoError}</div>}
             </div>
 
             {videoLoading && videoScripts.length === 0 && (
-              <div style={{ background: "#fff", border: "1px solid #d4e8b0", borderRadius: 12, padding: "32px", textAlign: "center", color: "#a0c070", fontSize: 14 }}>
-                正在規劃今天要拍什麼⋯⋯
-              </div>
+              <div style={{ background: "#fff", border: "1px solid #d4e8b0", borderRadius: 12, padding: "32px", textAlign: "center", color: "#a0c070", fontSize: 14 }}>正在規劃今天要拍什麼⋯⋯</div>
             )}
-
             {videoScripts.length > 0 && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {videoScripts.map((script, i) => (
-                  <VideoScriptCard
-                    key={i}
-                    content={script.content}
-                    voiceLabel={script.voice === "farmer" ? "農夫版" : "農婦版"}
-                    scriptIndex={i + 1}
-                    onCopy={() => copyVideoScript(script.content, i)}
-                    copied={videoCopied === String(i)}
-                  />
+                  <VideoScriptCard key={i} content={script.content} voiceLabel={script.voice === "farmer" ? "農夫版" : "農婦版"} scriptIndex={i + 1} onCopy={() => copyVideoScript(script.content, i)} copied={videoCopied === String(i)} />
                 ))}
               </div>
             )}
-
             <div style={{ marginTop: 28, padding: "16px 20px", background: "#eef7e0", borderRadius: 8, borderLeft: "3px solid #8ab561" }}>
               <div style={{ fontSize: 12, color: "#4a7c2e", fontWeight: 600, marginBottom: 6 }}>使用方式</div>
               <div style={{ fontSize: 12, color: "#5a7a3a", lineHeight: 1.8 }}>
                 · 出門前先生成腳本，知道要抓哪些畫面，工作不被打斷<br />
                 · 農事工作越詳細，素材清單越精準（可說「第一次採收」「今天天氣特別好」等細節）<br />
-                · 複製後截圖或貼到手機備忘錄，田裡快速查看 □ 清單<br />
                 · 農婦版通常比農夫版更輕鬆有趣，讓都市觀眾更容易感同身受
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ── 溫和腳本頁 ── */}
+        {tab === "gentle" && (
+          <>
+            {/* 公式說明 */}
+            <div style={{ background: "#fdf6ee", border: "1px solid #e8d8c0", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+              <div style={{ fontSize: 12, color: "#8b5c2a", fontWeight: 600, marginBottom: 6 }}>🌿 溫和調性公式</div>
+              <div style={{ fontSize: 12, color: "#7a5030", lineHeight: 2 }}>
+                <span style={{ background: "#f5e8d4", padding: "1px 8px", borderRadius: 4, marginRight: 6 }}>前3秒</span>一句生活痛點或溫柔提問
+                <span style={{ color: "#c8a87a", margin: "0 8px" }}>→</span>
+                <span style={{ background: "#f5e8d4", padding: "1px 8px", borderRadius: 4, marginRight: 6 }}>中間</span>農場真實畫面 ＋ 簡單旁白
+                <span style={{ color: "#c8a87a", margin: "0 8px" }}>→</span>
+                <span style={{ background: "#f5e8d4", padding: "1px 8px", borderRadius: 4, marginRight: 6 }}>收尾</span>土地系結語 ＋ 品牌露出
+              </div>
+              <div style={{ fontSize: 11, color: "#9a7a5a", marginTop: 6 }}>不用大聲、不用搞笑、不用很會演。用溫柔旁白＋手部動作＋孩子表情＋土地細節。</div>
+            </div>
+
+            <div style={{ background: "#fff", border: "1px solid #e0d0b8", borderRadius: 12, padding: "24px 28px", marginBottom: 20, boxShadow: "0 2px 8px rgba(107,76,42,0.06)" }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: "#5a3010", display: "block", marginBottom: 8 }}>今日農事工作項目</label>
+              <textarea
+                value={gentleTasks} onChange={e => setGentleTasks(e.target.value)}
+                placeholder="例如：孩子第一次摸土、採收紫蘇做醬油、整理長者菜園⋯⋯"
+                rows={3}
+                style={{ width: "100%", padding: "12px 14px", fontSize: 15, fontFamily: "'Noto Serif TC', serif", border: "1px solid #d4b898", borderRadius: 8, background: "#fffaf4", color: "#2e1a0e", resize: "vertical", outline: "none", boxSizing: "border-box" }}
+              />
+              <div style={{ fontSize: 12, color: "#b8905a", marginTop: 4 }}>越具體越好 ── 有孩子互動、手作過程、特別細節的農事，最容易產出溫暖腳本</div>
+
+              {/* 聲線 */}
+              <div style={{ marginTop: 20 }}>
+                <label style={{ fontSize: 12, color: "#7a5030", display: "block", marginBottom: 8, fontWeight: 600 }}>旁白聲線</label>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {GENTLE_VOICES.map(v => (
+                    <button key={v.key} onClick={() => setGentleVoice(v.key)} style={{ flex: 1, padding: "10px 8px", borderRadius: 8, textAlign: "center", fontFamily: "inherit", cursor: "pointer", border: gentleVoice === v.key ? "2px solid #8b5c2a" : "1px solid #d4b898", background: gentleVoice === v.key ? "#f5e8d4" : "#fffaf4", transition: "all 0.15s" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#5a3010" }}>{v.label}</div>
+                      <div style={{ fontSize: 11, color: "#a07040", marginTop: 2 }}>{v.sub}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 主題 */}
+              <div style={{ marginTop: 20 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <label style={{ fontSize: 12, color: "#7a5030", fontWeight: 600 }}>影片主題 <span style={{ fontWeight: 400, color: "#b8905a" }}>（選 1-2 個，或 AI 自選）</span></label>
+                  {gentleThemeMode === "manual" && <span style={{ fontSize: 11, color: selectedGentleThemes.length >= 2 ? "#c04040" : "#a07040" }}>已選 {selectedGentleThemes.length}/2</span>}
+                </div>
+                <button onClick={() => { setGentleThemeMode("auto"); setSelectedGentleThemes([]); }} style={{ width: "100%", padding: "10px 14px", marginBottom: 8, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", border: gentleThemeMode === "auto" ? "2px solid #8b5c2a" : "1px solid #d4b898", background: gentleThemeMode === "auto" ? "#f5e8d4" : "#fffaf4", transition: "all 0.15s" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: gentleThemeMode === "auto" ? "#5a3010" : "#5a3010" }}>🌱 AI 自選兩個</span>
+                  <span style={{ fontSize: 11, color: "#a07040", marginLeft: 8 }}>優先推薦曬過程 → 說故事 → 教知識 → 熬雞湯</span>
+                </button>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  {GENTLE_THEMES.map(t => {
+                    const isSelected = selectedGentleThemes.includes(t.key);
+                    const isAtLimit = !isSelected && selectedGentleThemes.length >= 2 && gentleThemeMode === "manual";
+                    return (
+                      <button key={t.key} onClick={() => toggleGentleTheme(t.key)} style={{ padding: "10px 12px", borderRadius: 8, cursor: isAtLimit ? "default" : "pointer", textAlign: "left", fontFamily: "inherit", transition: "all 0.15s", border: isSelected ? "2px solid #8b5c2a" : "1px solid #d4b898", background: isSelected ? "#f5e8d4" : "#fffaf4", opacity: isAtLimit ? 0.45 : 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: isSelected ? "#5a3010" : "#5a3010" }}>{isSelected ? "✓ " : ""}{t.label}</span>
+                          {t.priority && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 8, background: t.priority === "最優先" ? "#f0d0a0" : "#f5e8d4", color: "#8b5c2a", fontWeight: 600 }}>{t.priority}</span>}
+                        </div>
+                        <div style={{ fontSize: 11, color: "#a07040", marginTop: 2 }}>{t.sub}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 長度 */}
+              <div style={{ marginTop: 18 }}>
+                <label style={{ fontSize: 12, color: "#7a5030", display: "block", marginBottom: 8, fontWeight: 600 }}>目標影片長度</label>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {VIDEO_DURATIONS.map(d => (
+                    <button key={d} onClick={() => setGentleDuration(d)} style={{ flex: 1, padding: "10px", borderRadius: 8, fontFamily: "inherit", fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "all 0.15s", border: gentleDuration === d ? "2px solid #8b5c2a" : "1px solid #d4b898", background: gentleDuration === d ? "#8b5c2a" : "#fffaf4", color: gentleDuration === d ? "#fef6ec" : "#7a5030" }}>{d}</button>
+                  ))}
+                </div>
+                <div style={{ fontSize: 11, color: "#b8905a", marginTop: 6 }}>溫和調性偏向 60-90 秒，讓旁白有呼吸的空間</div>
+              </div>
+
+              <button onClick={generateGentleScripts} disabled={gentleLoading || !gentleTasks.trim()} style={{ width: "100%", marginTop: 20, padding: "14px", background: gentleLoading ? "#c8a87a" : "#6b4c2a", color: "#fef6ec", border: "none", borderRadius: 8, fontSize: 16, fontFamily: "inherit", fontWeight: 700, cursor: gentleLoading || !gentleTasks.trim() ? "not-allowed" : "pointer", letterSpacing: 1, transition: "background 0.2s" }}>
+                {gentleLoading ? "輕輕規劃今天的旁白⋯⋯" : "🌿 同時生成兩份溫和腳本"}
+              </button>
+              {gentleError && <div style={{ fontSize: 13, color: "#c0392b", marginTop: 8 }}>{gentleError}</div>}
+            </div>
+
+            {gentleLoading && gentleScripts.length === 0 && (
+              <div style={{ background: "#fff", border: "1px solid #e0d0b8", borderRadius: 12, padding: "32px", textAlign: "center", color: "#c8a87a", fontSize: 14 }}>
+                農夫正在想今天要說什麼⋯⋯
+              </div>
+            )}
+            {gentleScripts.length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {gentleScripts.map((script, i) => (
+                  <GentleScriptCard key={i} content={script.content} voiceLabel={script.voice === "farmer" ? "農夫版" : "農婦版"} scriptIndex={i + 1} onCopy={() => copyGentleScript(script.content, i)} copied={gentleCopied === String(i)} />
+                ))}
+              </div>
+            )}
+
+            <div style={{ marginTop: 28, padding: "16px 20px", background: "#fdf6ee", borderRadius: 8, borderLeft: "3px solid #c8a87a" }}>
+              <div style={{ fontSize: 12, color: "#8b5c2a", fontWeight: 600, marginBottom: 6 }}>使用方式</div>
+              <div style={{ fontSize: 12, color: "#7a5030", lineHeight: 1.8 }}>
+                · 有孩子互動的農事特別適合這個調性（摸土、澆水、採收表情）<br />
+                · 旁白腳本可以直接念，不用另外想台詞，減少拍攝時的卡頓<br />
+                · 優先拍「曬過程」和「說故事」，這兩類在溫和調性效果最好<br />
+                · 複製後截圖存手機，開始工作前再看一眼，知道今天的旁白方向
               </div>
             </div>
           </>
@@ -690,9 +869,7 @@ export default function App() {
               收藏的好文會在下次生成時自動注入 prompt，讓 AI 學習你的風格偏好。每個聲線最多參考 2 篇。
             </div>
             {favorites.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "48px 0", color: "#a0c070", fontSize: 14 }}>
-                還沒有收藏。生成貼文後按 ⭐ 收藏你最喜歡的！
-              </div>
+              <div style={{ textAlign: "center", padding: "48px 0", color: "#a0c070", fontSize: 14 }}>還沒有收藏。生成貼文後按 ⭐ 收藏你最喜歡的！</div>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {favorites.map(fav => (
@@ -735,8 +912,7 @@ export default function App() {
                       </div>
                       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                         <span style={{ fontSize: 11, color: "#b0c8a0" }}>{new Date(h.timestamp).toLocaleDateString("zh-TW")}</span>
-                        <button onClick={() => isFavorited(h.text) ? removeFavorite(favorites.find(f => f.text === h.text)?.id) : addFavorite(h.text, h.voice)}
-                          style={{ padding: "3px 10px", fontSize: 11, background: isFavorited(h.text) ? "#fffbea" : "#f4fbea", border: `1px solid ${isFavorited(h.text) ? "#e0c840" : "#c8e0a0"}`, borderRadius: 6, color: isFavorited(h.text) ? "#a08010" : "#5a7a3a", cursor: "pointer", fontFamily: "inherit" }}>
+                        <button onClick={() => isFavorited(h.text) ? removeFavorite(favorites.find(f => f.text === h.text)?.id) : addFavorite(h.text, h.voice)} style={{ padding: "3px 10px", fontSize: 11, background: isFavorited(h.text) ? "#fffbea" : "#f4fbea", border: `1px solid ${isFavorited(h.text) ? "#e0c840" : "#c8e0a0"}`, borderRadius: 6, color: isFavorited(h.text) ? "#a08010" : "#5a7a3a", cursor: "pointer", fontFamily: "inherit" }}>
                           {isFavorited(h.text) ? "⭐ 已收藏" : "☆ 收藏"}
                         </button>
                       </div>
@@ -754,18 +930,33 @@ export default function App() {
   );
 }
 
+function GentleScriptCard({ content, voiceLabel, scriptIndex, onCopy, copied }) {
+  const theme = extractTheme(content);
+  const cardTitle = theme ? `腳本${scriptIndex}・${theme}` : `腳本 ${scriptIndex}`;
+  return (
+    <div style={{ background: "#fff", border: "1px solid #e0d0b8", borderTop: "3px solid #6b4c2a", borderRadius: 12, overflow: "hidden", boxShadow: "0 2px 8px rgba(107,76,42,0.08)" }}>
+      <div style={{ padding: "14px 20px 12px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #f0e8d8" }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: "#6b4c2a" }}>{cardTitle}</span>
+        <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 12, background: "#f5ead8", color: "#8b5c2a" }}>{voiceLabel}</span>
+        <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 12, background: "#faf5ed", color: "#9a7a5a" }}>溫和調性</span>
+      </div>
+      <div style={{ padding: "20px 24px 16px", fontSize: 14, color: "#2e1a0e", lineHeight: 2.1, fontFamily: "'Noto Serif TC', serif", whiteSpace: "pre-wrap" }}>
+        {content}
+      </div>
+      <div style={{ padding: "0 20px 20px" }}>
+        <button onClick={onCopy} style={{ width: "100%", padding: "14px", background: copied ? "#7a6040" : "#6b4c2a", color: "#fef6ec", border: "none", borderRadius: 8, fontSize: 15, fontFamily: "inherit", fontWeight: 700, cursor: "pointer", letterSpacing: 1, transition: "background 0.25s" }}>
+          {copied ? "✅ 已複製！存到手機備忘錄吧" : "📋 複製腳本"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function VideoScriptCard({ content, voiceLabel, scriptIndex, onCopy, copied }) {
   const theme = extractTheme(content);
   const cardTitle = theme ? `腳本${scriptIndex}・${theme}` : `腳本 ${scriptIndex}`;
   return (
-    <div style={{
-      background: "#fff",
-      border: "1px solid #d4e8b0",
-      borderTop: "3px solid #1a3a10",
-      borderRadius: 12,
-      overflow: "hidden",
-      boxShadow: "0 2px 8px rgba(45,74,30,0.06)",
-    }}>
+    <div style={{ background: "#fff", border: "1px solid #d4e8b0", borderTop: "3px solid #1a3a10", borderRadius: 12, overflow: "hidden", boxShadow: "0 2px 8px rgba(45,74,30,0.06)" }}>
       <div style={{ padding: "14px 20px 12px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #eef5e4" }}>
         <span style={{ fontSize: 15, fontWeight: 700, color: "#1a3a10" }}>{cardTitle}</span>
         <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 12, background: "#d8f0b0", color: "#2a5010" }}>{voiceLabel}</span>
@@ -775,13 +966,7 @@ function VideoScriptCard({ content, voiceLabel, scriptIndex, onCopy, copied }) {
         {content}
       </div>
       <div style={{ padding: "0 20px 20px" }}>
-        <button onClick={onCopy} style={{
-          width: "100%", padding: "14px",
-          background: copied ? "#4a7c2e" : "#1a3a10",
-          color: "#fff", border: "none", borderRadius: 8,
-          fontSize: 15, fontFamily: "inherit", fontWeight: 700,
-          cursor: "pointer", letterSpacing: 1, transition: "background 0.25s",
-        }}>
+        <button onClick={onCopy} style={{ width: "100%", padding: "14px", background: copied ? "#4a7c2e" : "#1a3a10", color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontFamily: "inherit", fontWeight: 700, cursor: "pointer", letterSpacing: 1, transition: "background 0.25s" }}>
           {copied ? "✅ 已複製！存到手機備忘錄吧" : "📋 複製腳本"}
         </button>
       </div>
@@ -803,20 +988,10 @@ function PostCard({ title, subtitle, accentColor, tagColor, tagText, content, lo
       </div>
       {content && (
         <div style={{ padding: "0 20px 20px", display: "flex", gap: 10 }}>
-          <button onClick={onFavorite} style={{
-            flex: "0 0 auto", padding: "14px 18px",
-            background: isFavorited ? "#fffbea" : "#f4fbea",
-            border: `1.5px solid ${isFavorited ? "#e0c840" : "#c8e0a0"}`,
-            borderRadius: 8, fontSize: 18, cursor: "pointer", transition: "all 0.2s",
-          }}>
+          <button onClick={onFavorite} style={{ flex: "0 0 auto", padding: "14px 18px", background: isFavorited ? "#fffbea" : "#f4fbea", border: `1.5px solid ${isFavorited ? "#e0c840" : "#c8e0a0"}`, borderRadius: 8, fontSize: 18, cursor: "pointer", transition: "all 0.2s" }}>
             {isFavorited ? "⭐" : "☆"}
           </button>
-          <button onClick={onCopy} style={{
-            flex: 1, padding: "14px", background: copied ? "#4a7c2e" : accentColor,
-            color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontFamily: "inherit",
-            fontWeight: 700, cursor: "pointer", letterSpacing: 1,
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.25s",
-          }}>
+          <button onClick={onCopy} style={{ flex: 1, padding: "14px", background: copied ? "#4a7c2e" : accentColor, color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontFamily: "inherit", fontWeight: 700, cursor: "pointer", letterSpacing: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "background 0.25s" }}>
             {copied ? "✅ 已複製！貼到 FB 吧" : "📋 一鍵複製貼文"}
           </button>
         </div>
