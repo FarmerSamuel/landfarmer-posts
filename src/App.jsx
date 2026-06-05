@@ -257,6 +257,70 @@ const GENTLE_VOICE_RULES = {
 鏡頭重點：農婦的生活場景、家人互動、孩子的表情、手作的細節。`,
 };
 
+// ── IP 個人貼文系統提示 ────────────────────────────────
+const BASE_IP_POST = `你是大地農夫農場主人的個人 IP 貼文代筆，幫助他建立個人品牌。注意：這是個人視角貼文，不是品牌文案。
+
+【IP 定位：從波動到節奏的人】
+背景：前金融交易員，現在是新北市新店區的農夫爸爸。
+核心張力：金融業的即時反應 vs. 農業的等待節奏。
+核心意境（不一定用原句，但每篇都要有這個對比）：
+- 「以前的我一定很急。」——以前的自己（交易員）vs 現在的自己
+- 「守節奏。不讓波動帶走自己。」
+
+【禁止事項】
+✗ 禁止說教或升華（不說「土地教我懂得xxx」「這讓我深刻體悟到」）
+✗ 禁止自憐自哀（不說「很辛苦但值得」「努力一定有回報」）
+✗ 禁止人格分裂（統一用「我」，不分農夫/農婦角色，這是個人貼文）
+✗ 禁止廣告文案感（不用「現在入手」「立刻報名」「強力推薦」）
+✗ 禁止假裝完美（允許猶豫、矛盾、沒有結論）
+✗ 禁止大道理收尾（結尾不要是「所以⋯⋯」「我學到了⋯⋯」）
+
+【聲音規則】
+- 口語化，像自言自語，不像演講或寫作
+- 允許句子沒有結論，允許帶問號
+- 偶爾帶出「以前做交易的時候」作為對比，不是每篇都要說
+- 細節要真實、具體（顏色、氣味、觸感，不是「很美的自然」）
+- 有一種「剛好想到這件事」的隨筆感
+
+【六個模組骨架】（根據密度選擇使用幾個）
+1. 微張力開場：一個具體農場畫面或今日事件，帶一點意外或矛盾感
+2. 具體生活畫面：用細節讓人感覺在場（顏色/氣味/觸感/聲音）
+3. 舊自己對比：以前（交易員）vs 現在，就是陳述，不說誰對誰錯
+4. 動搖瞬間（可選）：誠實說出「我也不確定」的瞬間
+5. 現在的功課：一句話，說現在在練習的具體行為，不是道理
+6. 未來畫面收尾：十年後想讓孩子記得的一個畫面，或一個模糊但真實的願景
+
+【截圖句（可選）】
+能獨立成一句話的短句：有觀點、有矛盾感、有個性。放在最後。
+
+【密度對照】
+淡（日常碎念型）：100字以內，1-2個模組，沒有完整結構
+中（守節奏對比型）：150-250字，3-4個模組，有舊自己對比
+濃（截圖感觀點型）：200-300字，5-6個模組，收尾有張力
+
+【格式規則】
+- 每段落短，每句話盡量獨立成一行
+- hashtag 2-3個，要有個性，不要太廣泛
+- 不加任何說明前言，直接輸出貼文內容
+
+現在根據以下資訊生成個人 IP 貼文：
+`;
+
+const IP_TYPES = [
+  { key: "auto", label: "AI 自選", sub: "按框架比例建議最適合的類型" },
+  { key: "daily", label: "生活紀錄", sub: "40%・農場日常碎念" },
+  { key: "rhythm", label: "守節奏", sub: "25%・舊自己 vs 現在的對比" },
+  { key: "father", label: "父親視角", sub: "15%・十年後孩子記得的畫面" },
+  { key: "doubt", label: "動搖揭露", sub: "10%・誠實說不確定" },
+  { key: "product", label: "產品帶出", sub: "10%・生活場景帶出產品" },
+];
+
+const IP_DENSITIES = [
+  { key: "light", label: "淡", sub: "日常碎念", desc: "100字內" },
+  { key: "medium", label: "中", sub: "節奏對比", desc: "150-250字" },
+  { key: "strong", label: "濃", sub: "截圖感", desc: "200-300字" },
+];
+
 // ── 常數 ────────────────────────────────────────────────
 const MOODS = ["農事日誌", "產品推廣", "會員故事", "活動預告", "廢文日常", "節氣感懷"];
 const SEASONS = ["春", "夏", "秋", "冬"];
@@ -346,6 +410,21 @@ export default function App() {
   const [gentleLoading, setGentleLoading] = useState(false);
   const [gentleCopied, setGentleCopied] = useState("");
   const [gentleError, setGentleError] = useState("");
+
+  // IP post state
+  const [ipEvent, setIpEvent] = useState("");
+  const [ipDensity, setIpDensity] = useState("medium");
+  const [ipType, setIpType] = useState("auto");
+  const [ipIncludeDoubt, setIpIncludeDoubt] = useState(false);
+  const [ipIncludeScreenshot, setIpIncludeScreenshot] = useState(false);
+  const [ipPost, setIpPost] = useState("");
+  const [ipLoading, setIpLoading] = useState(false);
+  const [ipCopied, setIpCopied] = useState(false);
+  const [ipError, setIpError] = useState("");
+  const [ipChecklist, setIpChecklist] = useState({
+    hasScene: false, hasInner: false, hasImperfect: false,
+    noPreaching: false, soundsLikeMe: false,
+  });
 
   // Shared favorites & history
   const [favorites, setFavorites] = useState(() => loadLS("lf_favorites", []));
@@ -527,6 +606,38 @@ export default function App() {
     setGentleLoading(false);
   };
 
+  const generateIPPost = async () => {
+    if (!ipEvent.trim()) return;
+    setIpLoading(true); setIpError(""); setIpPost("");
+    setIpChecklist({ hasScene: false, hasInner: false, hasImperfect: false, noPreaching: false, soundsLikeMe: false });
+    try {
+      const densityObj = IP_DENSITIES.find(d => d.key === ipDensity);
+      const densityLabel = densityObj ? `${densityObj.label}（${densityObj.sub}，${densityObj.desc}）` : "中";
+      const typeInstruction = ipType === "auto"
+        ? "根據今日事件，選擇最適合的內容類型（生活紀錄/守節奏/父親視角/動搖揭露/產品帶出）。"
+        : `內容類型：${IP_TYPES.find(t => t.key === ipType)?.label}。`;
+      const doubtOption = ipIncludeDoubt ? "必須包含「動搖瞬間」模組：誠實說出不確定的時刻。" : "";
+      const screenshotOption = ipIncludeScreenshot ? "必須在結尾加一句截圖句（能獨立成一句話、有觀點有矛盾的短句）。" : "";
+      const content = `${BASE_IP_POST}\n今日事件：${ipEvent}\n密度：${densityLabel}\n${typeInstruction}\n${doubtOption}\n${screenshotOption}\n請直接輸出貼文內容，不要加任何說明或前言。`;
+      const result = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1200, messages: [{ role: "user", content }] }),
+      }).then(r => r.json()).then(d => d.content?.map(b => b.text || "").join("") || "");
+      setIpPost(result);
+    } catch (e) { setIpError("生成失敗：" + e.message); }
+    setIpLoading(false);
+  };
+
+  const copyIPPost = () => {
+    navigator.clipboard.writeText(ipPost);
+    setIpCopied(true); setTimeout(() => setIpCopied(false), 2000);
+  };
+
+  const toggleIPChecklist = (key) => {
+    setIpChecklist(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const copy = (text, key) => {
     navigator.clipboard.writeText(text);
     setCopied(key); setTimeout(() => setCopied(""), 2000);
@@ -553,12 +664,13 @@ export default function App() {
           <span style={{ fontSize: 28, fontWeight: 700, color: "#e8f5d0", letterSpacing: 2 }}>大地農夫</span>
           <span style={{ fontSize: 13, color: "#a8c97a", letterSpacing: 1 }}>內容生成系統</span>
         </div>
-        <div style={{ fontSize: 12, color: "#7aac48", marginTop: 4 }}>FB 文案 × 影片腳本 × 溫和調性 · AI 生成草稿</div>
+        <div style={{ fontSize: 12, color: "#7aac48", marginTop: 4 }}>FB 文案 × 影片腳本 × 溫和調性 × IP 貼文 · AI 生成草稿</div>
         <div style={{ display: "flex", gap: 4, marginTop: 16, flexWrap: "wrap" }}>
           {[
             { key: "generate", label: "✏️ FB文案" },
             { key: "video", label: "🎬 影片腳本" },
             { key: "gentle", label: "🌿 溫和腳本" },
+            { key: "ip", label: "✦ IP貼文" },
             { key: "favorites", label: `⭐ 好文收藏${favCount ? ` (${favCount})` : ""}` },
             { key: "history", label: `📋 歷史${histCount ? ` (${histCount})` : ""}` },
           ].map(t => (
@@ -862,6 +974,100 @@ export default function App() {
           </>
         )}
 
+        {/* ── IP 貼文頁 ── */}
+        {tab === "ip" && (
+          <>
+            <div style={{ background: "#fdf8ee", border: "1px solid #e8d498", borderRadius: 10, padding: "14px 18px", marginBottom: 20 }}>
+              <div style={{ fontSize: 12, color: "#9b6e1e", fontWeight: 600, marginBottom: 6 }}>✦ IP 定位：從波動到節奏的人</div>
+              <div style={{ fontSize: 12, color: "#7a5010", lineHeight: 2 }}>
+                前交易員 → 新店農夫爸爸　核心張力：即時反應 vs. 等待節奏<br />
+                <span style={{ background: "#f5e8c0", padding: "1px 8px", borderRadius: 4, marginRight: 6 }}>核心意境</span>「以前的我一定很急。」+ 守節奏・不讓波動帶走自己
+              </div>
+              <div style={{ fontSize: 11, color: "#b09050", marginTop: 6 }}>用「我」說話・不說教・允許猶豫・允許矛盾・允許沒有結論</div>
+            </div>
+
+            <div style={{ background: "#fff", border: "1px solid #e8d498", borderRadius: 12, padding: "24px 28px", marginBottom: 20, boxShadow: "0 2px 8px rgba(155,110,30,0.07)" }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: "#5a3a0a", display: "block", marginBottom: 8 }}>今天發生了什麼 / 你想說的</label>
+              <textarea
+                value={ipEvent} onChange={e => setIpEvent(e.target.value)}
+                placeholder={"例如：拔草拔到一半，突然想到以前在交易室看盤的感覺⋯⋯\n例如：帶孩子澆水，他把水澆到我鞋子上，然後說「爸爸你也需要喝水」"}
+                rows={4}
+                style={{ width: "100%", padding: "12px 14px", fontSize: 15, fontFamily: "'Noto Serif TC', serif", border: "1px solid #d4b860", borderRadius: 8, background: "#fffcf2", color: "#2e1a00", resize: "vertical", outline: "none", boxSizing: "border-box" }}
+              />
+              <div style={{ fontSize: 12, color: "#b8900a", marginTop: 4 }}>不需要寫完整 ── 碎片也可以，AI 會從裡面找到張力</div>
+
+              <div style={{ marginTop: 20 }}>
+                <label style={{ fontSize: 12, color: "#7a5010", display: "block", marginBottom: 8, fontWeight: 600 }}>內容類型</label>
+                <button onClick={() => setIpType("auto")} style={{ width: "100%", padding: "10px 14px", marginBottom: 8, borderRadius: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", border: ipType === "auto" ? "2px solid #9b6e1e" : "1px solid #d4b860", background: ipType === "auto" ? "#fdf0cc" : "#fffcf2", transition: "all 0.15s" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#7a4a00" }}>🤖 AI 自選</span>
+                  <span style={{ fontSize: 11, color: "#b8900a", marginLeft: 8 }}>按框架比例建議最適合的類型</span>
+                </button>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  {IP_TYPES.filter(t => t.key !== "auto").map(t => (
+                    <button key={t.key} onClick={() => setIpType(t.key)} style={{ padding: "10px 12px", borderRadius: 8, cursor: "pointer", textAlign: "left", fontFamily: "inherit", transition: "all 0.15s", border: ipType === t.key ? "2px solid #9b6e1e" : "1px solid #d4b860", background: ipType === t.key ? "#fdf0cc" : "#fffcf2" }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: ipType === t.key ? "#7a4a00" : "#5a3a0a" }}>{ipType === t.key ? "✓ " : ""}{t.label}</div>
+                      <div style={{ fontSize: 11, color: "#b8900a", marginTop: 2 }}>{t.sub}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 20 }}>
+                <label style={{ fontSize: 12, color: "#7a5010", display: "block", marginBottom: 8, fontWeight: 600 }}>內容濃度</label>
+                <div style={{ display: "flex", gap: 8 }}>
+                  {IP_DENSITIES.map(d => (
+                    <button key={d.key} onClick={() => setIpDensity(d.key)} style={{ flex: 1, padding: "12px 8px", borderRadius: 8, fontFamily: "inherit", cursor: "pointer", textAlign: "center", transition: "all 0.15s", border: ipDensity === d.key ? "2px solid #9b6e1e" : "1px solid #d4b860", background: ipDensity === d.key ? "#9b6e1e" : "#fffcf2", color: ipDensity === d.key ? "#fff" : "#5a3a0a" }}>
+                      <div style={{ fontSize: 22, fontWeight: 900, lineHeight: 1 }}>{d.label}</div>
+                      <div style={{ fontSize: 12, fontWeight: 600, marginTop: 4 }}>{d.sub}</div>
+                      <div style={{ fontSize: 11, marginTop: 2, opacity: 0.8 }}>{d.desc}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginTop: 18, display: "flex", gap: 10 }}>
+                <button onClick={() => setIpIncludeDoubt(v => !v)} style={{ flex: 1, padding: "10px 12px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all 0.15s", border: ipIncludeDoubt ? "2px solid #9b6e1e" : "1px solid #d4b860", background: ipIncludeDoubt ? "#fdf0cc" : "#fffcf2" }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#5a3a0a" }}>{ipIncludeDoubt ? "✓ " : ""}動搖瞬間</div>
+                  <div style={{ fontSize: 11, color: "#b8900a", marginTop: 2 }}>誠實說出不確定的時刻</div>
+                </button>
+                <button onClick={() => setIpIncludeScreenshot(v => !v)} style={{ flex: 1, padding: "10px 12px", borderRadius: 8, cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all 0.15s", border: ipIncludeScreenshot ? "2px solid #9b6e1e" : "1px solid #d4b860", background: ipIncludeScreenshot ? "#fdf0cc" : "#fffcf2" }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#5a3a0a" }}>{ipIncludeScreenshot ? "✓ " : ""}截圖句</div>
+                  <div style={{ fontSize: 11, color: "#b8900a", marginTop: 2 }}>最後加一句有觀點的獨立短句</div>
+                </button>
+              </div>
+
+              <button onClick={generateIPPost} disabled={ipLoading || !ipEvent.trim()} style={{ width: "100%", marginTop: 20, padding: "14px", background: ipLoading ? "#c8a040" : "#9b6e1e", color: "#fff9ec", border: "none", borderRadius: 8, fontSize: 16, fontFamily: "inherit", fontWeight: 700, cursor: ipLoading || !ipEvent.trim() ? "not-allowed" : "pointer", letterSpacing: 1, transition: "background 0.2s" }}>
+                {ipLoading ? "從波動裡找節奏中⋯⋯" : "✦ 生成個人 IP 貼文"}
+              </button>
+              {ipError && <div style={{ fontSize: 13, color: "#c0392b", marginTop: 8 }}>{ipError}</div>}
+            </div>
+
+            {ipLoading && !ipPost && (
+              <div style={{ background: "#fff", border: "1px solid #e8d498", borderRadius: 12, padding: "32px", textAlign: "center", color: "#c8a040", fontSize: 14 }}>正在寫你想說的⋯⋯</div>
+            )}
+
+            {ipPost && (
+              <IPPostCard
+                content={ipPost}
+                checklist={ipChecklist}
+                onToggleChecklist={toggleIPChecklist}
+                onCopy={copyIPPost}
+                copied={ipCopied}
+              />
+            )}
+
+            <div style={{ marginTop: 28, padding: "16px 20px", background: "#fdf8ee", borderRadius: 8, borderLeft: "3px solid #c8a040" }}>
+              <div style={{ fontSize: 12, color: "#9b6e1e", fontWeight: 600, marginBottom: 6 }}>使用提示</div>
+              <div style={{ fontSize: 12, color: "#7a5010", lineHeight: 1.8 }}>
+                · 這是你的個人貼文，不是品牌文案 ── 說「我」，不說「農夫」<br />
+                · 不需要寫完整的事 ── AI 會從碎片裡找到張力<br />
+                · 生成後用品質核對清單自檢，確認夠真實再發布<br />
+                · 「濃」版適合截圖分享，「淡」版適合純粹記錄當天心情
+              </div>
+            </div>
+          </>
+        )}
+
         {/* ── 收藏頁 ── */}
         {tab === "favorites" && (
           <div>
@@ -968,6 +1174,48 @@ function VideoScriptCard({ content, voiceLabel, scriptIndex, onCopy, copied }) {
       <div style={{ padding: "0 20px 20px" }}>
         <button onClick={onCopy} style={{ width: "100%", padding: "14px", background: copied ? "#4a7c2e" : "#1a3a10", color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontFamily: "inherit", fontWeight: 700, cursor: "pointer", letterSpacing: 1, transition: "background 0.25s" }}>
           {copied ? "✅ 已複製！存到手機備忘錄吧" : "📋 複製腳本"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function IPPostCard({ content, checklist, onToggleChecklist, onCopy, copied }) {
+  const checkItems = [
+    { key: "hasScene", label: "有具體畫面？（不是只有感覺）" },
+    { key: "hasInner", label: "有內在瞬間？（有「以前的我」意境）" },
+    { key: "hasImperfect", label: "有不完美？（允許矛盾、沒結論）" },
+    { key: "noPreaching", label: "沒有大道理？（沒有「土地教我⋯⋯」）" },
+    { key: "soundsLikeMe", label: "讀起來像你本人講話？" },
+  ];
+  const passCount = Object.values(checklist).filter(Boolean).length;
+  return (
+    <div style={{ background: "#fff", border: "1px solid #e8d498", borderTop: "3px solid #9b6e1e", borderRadius: 12, overflow: "hidden", boxShadow: "0 2px 8px rgba(155,110,30,0.08)" }}>
+      <div style={{ padding: "14px 20px 12px", display: "flex", alignItems: "center", gap: 10, borderBottom: "1px solid #f5e8c0" }}>
+        <span style={{ fontSize: 15, fontWeight: 700, color: "#9b6e1e" }}>✦ IP 貼文草稿</span>
+        <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 12, background: "#fdf0cc", color: "#9b6e1e" }}>個人視角</span>
+        <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 12, background: "#faf5e4", color: "#b8900a" }}>用「我」說話</span>
+      </div>
+      <div style={{ padding: "20px 24px 16px", fontSize: 15, color: "#2e1a00", lineHeight: 2.1, fontFamily: "'Noto Serif TC', serif", whiteSpace: "pre-wrap" }}>
+        {content}
+      </div>
+      <div style={{ margin: "0 20px 16px", padding: "14px 16px", background: "#fdf8ee", borderRadius: 8, border: "1px solid #e8d498" }}>
+        <div style={{ fontSize: 12, color: "#9b6e1e", fontWeight: 600, marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>發布前品質核對</span>
+          <span style={{ fontSize: 11, color: passCount === 5 ? "#4a7c2e" : "#b8900a" }}>{passCount}/5 {passCount === 5 ? "✅ 可以發了！" : "先檢查一下"}</span>
+        </div>
+        {checkItems.map((item, idx) => (
+          <div key={item.key} onClick={() => onToggleChecklist(item.key)} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", cursor: "pointer", borderBottom: idx < checkItems.length - 1 ? "1px solid #f0e4b0" : "none" }}>
+            <div style={{ width: 20, height: 20, flexShrink: 0, borderRadius: 4, border: checklist[item.key] ? "none" : "1.5px solid #d4b860", background: checklist[item.key] ? "#9b6e1e" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.15s" }}>
+              {checklist[item.key] && <span style={{ color: "#fff", fontSize: 13, fontWeight: 700, lineHeight: 1 }}>✓</span>}
+            </div>
+            <span style={{ fontSize: 13, color: checklist[item.key] ? "#9b6e1e" : "#7a5010", fontWeight: checklist[item.key] ? 600 : 400 }}>{item.label}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ padding: "0 20px 20px" }}>
+        <button onClick={onCopy} style={{ width: "100%", padding: "14px", background: copied ? "#7a5010" : "#9b6e1e", color: "#fff9ec", border: "none", borderRadius: 8, fontSize: 15, fontFamily: "inherit", fontWeight: 700, cursor: "pointer", letterSpacing: 1, transition: "background 0.25s" }}>
+          {copied ? "✅ 已複製！準備發布" : "📋 複製貼文"}
         </button>
       </div>
     </div>
