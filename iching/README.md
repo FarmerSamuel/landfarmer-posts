@@ -26,33 +26,31 @@
 
 ---
 
-## 部署方式 A：用 clasp（推薦，因講稿檔較大不適合手貼）
+## 部署方式 A：用 clasp（推薦，三步驟）
 
-需要 Node.js。
+需要 Node.js。只有「用 Google 帳號登入」這一步一定得你本人做（OAuth 授權無法代勞）。
 
 ```bash
 cd iching
-npm install                 # 安裝 clasp
-npx clasp login             # 用你的 Google 帳號登入授權
-npx clasp create --type webapp --title "易經占卦分析" --rootDir .
-                            # 會產生 .clasp.json（已被 gitignore）
-npx clasp push              # 上傳所有 .gs / .html / appsscript.json
-npx clasp open              # 開啟 Apps Script 編輯器
+npm install            # 安裝 clasp
+npx clasp login        # ← 用你的 Google 帳號登入授權（一次性，會開瀏覽器）
+npm run deploy         # 自動建立專案 + 上傳 + 部署，最後印出網址
 ```
 
-接著在編輯器裡：
+> 若 `clasp login` 在無瀏覽器環境，改用 `npx clasp login --no-localhost`，
+> 它會給你一個網址，授權後把代碼貼回終端機即可。
 
-1. **執行一次 `setup`**（選函式 `setup` → 執行）。會自動建立
-   「易經占卦紀錄」試算表與「易經占卦圖」資料夾，並要求授權。
-2. **設定 Claude 金鑰**：左側「專案設定 ⚙️ → 指令碼屬性 → 新增屬性」
-   - `ANTHROPIC_API_KEY` = 你的 Claude API key（必填，才能自動解卦）
-   - `CLAUDE_MODEL` = 模型 ID（可選，預設 `claude-opus-4-8`；想省成本可填 `claude-sonnet-4-6`）
-3. **部署 Web App**：右上「部署 → 新增部署 → 類型選『網頁應用程式』」
-   - 執行身分：**我自己**
-   - 誰可以存取：**只有我自己**（個人使用，最安全）
-   - 部署後取得網址，手機加到主畫面即可像 App 一樣用。
+部署完成後：
 
-> 之後改了程式，重跑 `npx clasp push`，並在部署頁面「管理部署 → 編輯 → 版本選新版」即可更新。
+1. 開啟印出的網址（`https://script.google.com/macros/s/<部署ID>/exec`）。
+   第一次會要求授權試算表/雲端硬碟/外部請求，按同意。
+   試算表「易經占卦紀錄」與資料夾「易經占卦圖」會**自動建立**，不必手動跑 setup。
+2. 頁面上若出現金鑰欄位，把 **Claude API key** 貼上按「儲存金鑰」即可自動解卦。
+   （金鑰只存到你自己的 Apps Script 指令碼屬性，不會外流。）
+   想換模型可在指令碼屬性加 `CLAUDE_MODEL`（預設 `claude-opus-4-8`，省成本可用 `claude-sonnet-4-6`）。
+3. 手機開啟同一網址、加到主畫面，即可像 App 一樣使用。
+
+> 之後改了程式，再跑一次 `npm run deploy` 即可更新。
 
 ## 部署方式 B：手動貼上（不需 Node）
 
@@ -60,7 +58,8 @@ npx clasp open              # 開啟 Apps Script 編輯器
 2. 依檔名一一新增檔案並貼上內容：`Code.gs`、`LecturesIndex.gs`、`Lectures1`～`Lectures9.gs`
    （指令碼檔），以及 `Index.html`、`GuaTexts.html`（HTML 檔）。
 3. 專案設定把 `appsscript.json` 內的 OAuth 範圍與時區對齊（或顯示資訊清單後手動編輯）。
-4. 後續步驟（`setup`、指令碼屬性、部署）同方式 A 的 1~3。
+4. 右上「部署 → 新增部署 → 網頁應用程式」，執行身分「我自己」、存取「只有我自己」。
+   開啟網址後同方式 A 的 1~3（試算表自動建立、在頁面貼上金鑰）。
 
 > ⚠️ 講稿檔每個約 900KB，手動貼上較費工，建議用方式 A。
 

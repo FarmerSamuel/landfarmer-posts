@@ -109,6 +109,11 @@
       <button class="btn-gray" onclick="dl()" id="btnDl" disabled>下載卦象圖</button>
     </div>
     <div class="hint" id="cfgHint"></div>
+    <div id="apiKeyBox" style="display:none; margin-top:10px; padding:12px; background:#fff8e6; border:1px solid #f0d27a; border-radius:6px; font-family:sans-serif;">
+      <div style="font-size:13px; color:#8a6d00; margin-bottom:6px;">尚未設定 Claude 金鑰，貼在這裡即可（只會存到你自己的 Apps Script，不會外流）：</div>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-..." style="width:60%; max-width:340px;">
+      <button class="btn-blue" onclick="saveApiKey()">儲存金鑰</button>
+    </div>
   </div>
 
   <div class="status" id="status"></div>
@@ -229,13 +234,27 @@ window.onload = function(){
   let d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
   document.getElementById('dateIn').value=d.toISOString().slice(0,16);
   document.querySelectorAll('.ys').forEach(s=>{ YAO_DATA.forEach(o=>s.add(new Option(o.t,o.v))); s.value=7; });
-  call('getConfig').then(cfg=>{
+  refreshConfig();
+};
+
+function refreshConfig(){
+  return call('getConfig').then(cfg=>{
     var h=document.getElementById('cfgHint');
-    if(cfg.hasApiKey){ h.textContent='AI 解卦：使用 '+cfg.model; }
-    else{ h.textContent='⚠️ 尚未設定 ANTHROPIC_API_KEY，可先用「複製 AI 指令」貼到外部 AI。'; }
+    document.getElementById('apiKeyBox').style.display = cfg.hasApiKey ? 'none' : 'block';
+    h.textContent = cfg.hasApiKey ? ('AI 解卦：使用 '+cfg.model) : '可先設定金鑰自動解卦，或用「複製 AI 指令」貼到外部 AI。';
     if(cfg.sheetUrl) document.getElementById('sheetLink').href=cfg.sheetUrl;
   }).catch(()=>{});
-};
+}
+
+function saveApiKey(){
+  var k=document.getElementById('apiKeyInput').value;
+  if(!k){ setStatus('請先貼上金鑰', true); return; }
+  setStatus('儲存金鑰中…');
+  call('setApiKey', k).then(res=>{
+    if(res.ok){ document.getElementById('apiKeyInput').value=''; setStatus('✅ 金鑰已儲存，現在可用 AI 解卦。'); refreshConfig(); }
+    else setStatus(res.error||'儲存失敗', true);
+  }).catch(e=>setStatus('儲存失敗：'+e.message, true));
+}
 
 function switchTab(t){
   document.getElementById('tab-cast').classList.toggle('active', t==='cast');

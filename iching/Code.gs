@@ -47,11 +47,27 @@ function setup() {
 }
 
 function getConfig() {
+  // 首次開啟即自動建立試算表與資料夾，免去手動執行 setup
+  var ss = ensureSpreadsheet_();
+  ensureFolder_();
   return {
     hasApiKey: !!PROP.getProperty('ANTHROPIC_API_KEY'),
     model: PROP.getProperty('CLAUDE_MODEL') || DEFAULT_MODEL,
-    sheetUrl: PROP.getProperty('SHEET_ID') ? SpreadsheetApp.openById(PROP.getProperty('SHEET_ID')).getUrl() : ''
+    sheetUrl: ss.getUrl()
   };
+}
+
+// 讓使用者直接在 App 內設定 Claude 金鑰（存在自己的指令碼屬性，存取限本人）
+function setApiKey(key) {
+  key = (key || '').trim();
+  if (!key) return { ok: false, error: '金鑰不可空白' };
+  PROP.setProperty('ANTHROPIC_API_KEY', key);
+  return { ok: true };
+}
+function setModel(model) {
+  model = (model || '').trim();
+  if (model) PROP.setProperty('CLAUDE_MODEL', model);
+  return { ok: true, model: PROP.getProperty('CLAUDE_MODEL') || DEFAULT_MODEL };
 }
 
 function ensureSpreadsheet_() {
