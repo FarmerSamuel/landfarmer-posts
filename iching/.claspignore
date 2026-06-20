@@ -1,0 +1,17 @@
+# clasp 只上傳 GAS 需要的檔案，其餘忽略
+**/**
+
+!appsscript.json
+!Code.gs
+!LecturesIndex.gs
+!Lectures1.gs
+!Lectures2.gs
+!Lectures3.gs
+!Lectures4.gs
+!Lectures5.gs
+!Lectures6.gs
+!Lectures7.gs
+!Lectures8.gs
+!Lectures9.gs
+!Index.html
+!GuaTexts.html

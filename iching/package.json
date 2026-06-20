@@ -1,0 +1,15 @@
+{
+  "name": "iching-online",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "易經占卦分析・線上版（Google Apps Script）",
+  "scripts": {
+    "push": "clasp push",
+    "open": "clasp open",
+    "build:lectures": "node tools/build-lectures.mjs"
+  },
+  "devDependencies": {
+    "@google/clasp": "^2.4.2"
+  }
+}
