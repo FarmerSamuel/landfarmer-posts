@@ -3,8 +3,3 @@ dist/
 .env
 .env.local
 .DS_Store
-
-# Google Apps Script (clasp) — 本機憑證，勿提交
-.clasp.json
-iching/.clasp.json
-.clasprc.json
