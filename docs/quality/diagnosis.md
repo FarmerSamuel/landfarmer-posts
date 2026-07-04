@@ -4,7 +4,7 @@
 
 ## 第 1 名：最漏 token — 整檔重讀 1,100 行的 App.jsx
 
-**現象**：全部邏輯與 8 個 AI prompt 都在單一 src/App.jsx。歷次 session 不論改多小，
+**現象**：全部邏輯與 8 個 AI prompt 都在單一千行級的 src/App.jsx。歷次 session 不論改多小，
 都整檔 Read（約 3 萬 token），context 壓縮後又重讀一次。這是本專案最大的 token 漏洞。
 
 **修法（弱模型照做）**：CLAUDE.md 內建「檔案地圖」——列出每個功能區塊的搜尋錨點

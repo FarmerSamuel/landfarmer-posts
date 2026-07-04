@@ -5,7 +5,7 @@
 
 ## 硬事實
 
-- React + Vite 單頁應用。主檔 `src/App.jsx`（約 1,200 行，全部 UI 邏輯與
+- React + Vite 單頁應用。主檔 `src/App.jsx`（千行級單檔，全部 UI 邏輯與
   8 個 AI prompt 都在這一檔）。`api/generate.js` 是 Anthropic API 代理，幾乎不動。
 - 唯一機器驗證：`npx vite build`（無測試、無 lint）。build 過 ≠ 功能對。
 - 部署：push 到 main ＝ 直接上線（Vercel 自動部署，無 staging）。
@@ -19,7 +19,8 @@
    優先分段讀取，整檔 Read 約耗 3 萬 token，僅在跨全檔重構時使用。
 2. **改任何 BASE_* prompt 常數後**，逐條核對「同步配對表」，
    回報中每條寫「查過、有改」或「查過、不需改」。
-3. **push 前 build 必過**；回報完成前逐條自查任務檢查點。
+3. **push 前 build 必過**；回報完成前逐條自查任務檢查點
+   （檢查點＝把使用者需求拆成逐點清單，每點標「已做／不需做＋原因」）。
 4. **回報格式**：改了什麼（檔案:行號）、配對表核對結果、build 結果、不確定的點。
 
 ## 檔案地圖（src/App.jsx 內用 Grep 找錨點，行號會漂移、錨點不會）
@@ -27,7 +28,7 @@
 | 要改什麼 | Grep 錨點 |
 |---|---|
 | FB文案三種聲線 prompt | `BASE_FARMER` `BASE_FARMWIFE` `BASE_YEYANG` |
-| 全 prompt 共用語氣規則 | `TONE_RULE`（改它影響所有生成，先告知使用者影響範圍） |
+| 全 prompt 共用語氣規則 | `TONE_RULE`（改它影響所有生成，改前先向使用者確認影響範圍） |
 | 影片腳本 prompt | `BASE_VIDEO_SCRIPT` `VIDEO_VOICE_RULES` |
 | 溫和腳本 prompt | `BASE_GENTLE_SCRIPT` `GENTLE_VOICE_RULES` |
 | IP貼文 prompt 與選項 | `BASE_IP_POST` `IP_TYPES` `IP_DENSITIES` |
@@ -41,6 +42,7 @@
 
 | 改動 | 必查（Grep 錨點在括號內） |
 |---|---|
+| BASE_FARMER／BASE_FARMWIFE／BASE_YEYANG | generate 分頁三張 PostCard 的 title 與 subtitle 文字（`PostCard title=`） |
 | BASE_IP_POST | IP頁定位條（`IP 定位`）、IPPostCard 的 `checkItems`、IP_TYPES/IP_DENSITIES 的 sub 與 desc 文字 |
 | BASE_VIDEO_SCRIPT 的七大主題 | `VIDEO_THEMES` 清單、影片頁「使用方式」提示 |
 | BASE_GENTLE_SCRIPT | `GENTLE_THEMES`（含 priority 標籤）、溫和頁公式說明條（`溫和調性公式`）、「使用方式」提示 |
